@@ -6,23 +6,21 @@ RUN a2enmod rewrite headers
 # Install mysqli extension
 RUN docker-php-ext-install mysqli
 
-# Set working directory
-WORKDIR /var/www/html/backend
-
-# Copy backend source
+# Copy backend source directly into DocumentRoot
+WORKDIR /var/www/html
 COPY . .
 
-# Apache config: allow .htaccess overrides and set DocumentRoot
-RUN echo '<VirtualHost *:80>\n\
-    DocumentRoot /var/www/html/backend\n\
-    <Directory /var/www/html/backend>\n\
+# Apache config: serve from /var/www/html with .htaccess support
+RUN printf '<VirtualHost *:80>\n\
+    DocumentRoot /var/www/html\n\
+    <Directory /var/www/html>\n\
         Options -Indexes +FollowSymLinks\n\
         AllowOverride All\n\
         Require all granted\n\
     </Directory>\n\
     ErrorLog ${APACHE_LOG_DIR}/error.log\n\
     CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
-</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+</VirtualHost>\n' > /etc/apache2/sites-available/000-default.conf
 
 # PHP session config
 RUN echo "session.cookie_samesite = None" >> /usr/local/etc/php/conf.d/session.ini \
