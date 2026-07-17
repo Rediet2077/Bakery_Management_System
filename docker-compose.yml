@@ -1,0 +1,57 @@
+version: '3.9'
+
+services:
+
+  # ── MySQL Database ──────────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    container_name: bakery_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: bakery_db
+      MYSQL_USER: ${MYSQL_USER:-bakery_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-bakery_pass}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/bakery.sql:/docker-entrypoint-initdb.d/bakery.sql:ro
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-rootpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── PHP / Apache Backend ────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bakery_backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_USER: ${MYSQL_USER:-bakery_user}
+      DB_PASS: ${MYSQL_PASSWORD:-bakery_pass}
+      DB_NAME: bakery_db
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/var/www/html/backend
+
+  # ── React / Nginx Frontend ──────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: bakery_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
