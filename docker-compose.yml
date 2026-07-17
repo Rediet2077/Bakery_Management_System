@@ -35,6 +35,7 @@ services:
       DB_USER: ${MYSQL_USER:-bakery_user}
       DB_PASS: ${MYSQL_PASSWORD:-bakery_pass}
       DB_NAME: bakery_db
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
     depends_on:
       db:
         condition: service_healthy
