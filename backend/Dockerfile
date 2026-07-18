@@ -8,7 +8,12 @@ RUN docker-php-ext-install mysqli
 
 # Copy backend source directly into DocumentRoot
 WORKDIR /var/www/html
-COPY . .
+COPY index.php .
+COPY .htaccess .
+COPY api/ api/
+COPY auth/ auth/
+COPY config/ config/
+COPY middleware/ middleware/
 
 # Apache config: serve from /var/www/html with .htaccess support
 RUN printf '<VirtualHost *:80>\n\
@@ -24,6 +29,7 @@ RUN printf '<VirtualHost *:80>\n\
 
 # PHP session config
 RUN echo "session.cookie_samesite = None" >> /usr/local/etc/php/conf.d/session.ini \
- && echo "session.cookie_secure = Off" >> /usr/local/etc/php/conf.d/session.ini
+ && echo "session.cookie_secure = 0" >> /usr/local/etc/php/conf.d/session.ini \
+ && echo "session.cookie_httponly = 1" >> /usr/local/etc/php/conf.d/session.ini
 
 EXPOSE 80
