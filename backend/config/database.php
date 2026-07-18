@@ -11,13 +11,18 @@ function getDB() {
         http_response_code(500);
         die(json_encode(['message' => 'mysqli_init failed']));
     }
-    // Timeout after 10 seconds
-    $conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 10);
-    // Aiven requires SSL
-    $conn->ssl_set(NULL, NULL, NULL, NULL, NULL);
-    if (!$conn->real_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT, NULL, MYSQLI_CLIENT_SSL)) {
-        http_response_code(500);
-        die(json_encode(['message' => 'Database connection failed: ' . mysqli_connect_error()]));
+    $conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 15);
+
+    // Try with SSL first, fall back without if needed
+    $flags = MYSQLI_CLIENT_SSL | MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT;
+    if (!@$conn->real_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT, NULL, $flags)) {
+        // Retry without SSL verify
+        $conn = mysqli_init();
+        $conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 15);
+        if (!$conn->real_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT)) {
+            http_response_code(500);
+            die(json_encode(['message' => 'Database connection failed: ' . mysqli_connect_error()]));
+        }
     }
     $conn->set_charset('utf8mb4');
     return $conn;
