@@ -32,6 +32,7 @@ COPY api/ ./api/
 COPY auth/ ./auth/
 COPY config/ ./config/
 COPY middleware/ ./middleware/
+COPY setup.php ./setup.php
 
 # Verify index.php is present (cache bust: v2)
 RUN test -f /var/www/html/index.php || (echo "ERROR: index.php not found in /var/www/html" && exit 1)
