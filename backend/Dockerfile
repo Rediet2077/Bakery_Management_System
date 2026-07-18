@@ -3,8 +3,8 @@ FROM php:8.2-apache
 # Enable required Apache modules
 RUN a2enmod rewrite headers
 
-# Install mysqli extension
-RUN docker-php-ext-install mysqli
+# Install mysqli and PDO MySQL extensions
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 # Apache config: serve from /var/www/html with .htaccess support
 RUN printf '<VirtualHost *:80>\n\
