@@ -44,10 +44,10 @@ $queries = [
 ) ENGINE=InnoDB",
 
 "INSERT IGNORE INTO users (username, password, role) VALUES
-('admin', '\$2y\$10\$qwWAl5nXUxPKONV95mr8beKgbWody0lHDqW7Kfc..MpSMSn2D16ZG', 'admin'),
-('john',     '\$2y\$10\$EbOebyQV7/Fw7FGDN9MnFu9JCxsiZwDe/srbHnaqRniSkUe75Mtmu', 'cashier'),
-('johndoe',  '\$2y\$10\$EbOebyQV7/Fw7FGDN9MnFu9JCxsiZwDe/srbHnaqRniSkUe75Mtmu', 'cashier'),
-('janesmith','\$2y\$10\$EbOebyQV7/Fw7FGDN9MnFu9JCxsiZwDe/srbHnaqRniSkUe75Mtmu', 'cashier')",
+('admin',     '\$2y\$10\$qwWAl5nXUxPKONV95mr8beKgbWody0lHDqW7Kfc..MpSMSn2D16ZG', 'admin'),
+('john',      '\$2y\$10\$EbOebyQV7/Fw7FGDN9MnFu9JCxsiZwDe/srbHnaqRniSkUe75Mtmu', 'cashier'),
+('johndoe',   '\$2y\$10\$EbOebyQV7/Fw7FGDN9MnFu9JCxsiZwDe/srbHnaqRniSkUe75Mtmu', 'cashier'),
+('janesmith', '\$2y\$10\$EbOebyQV7/Fw7FGDN9MnFu9JCxsiZwDe/srbHnaqRniSkUe75Mtmu', 'cashier')",
 
 "INSERT IGNORE INTO products (name, category, price, stock) VALUES
 ('Bread',      'Bread',    2.00,  80),
@@ -63,15 +63,16 @@ $queries = [
 
 $errors = [];
 foreach ($queries as $sql) {
-    if (!$db->query($sql)) {
-        $errors[] = $db->error;
+    try {
+        $db->exec($sql);
+    } catch (PDOException $e) {
+        $errors[] = $e->getMessage();
     }
 }
 
+header('Content-Type: application/json');
 if (empty($errors)) {
     echo json_encode(['status' => 'success', 'message' => 'Database tables created and seeded successfully!']);
 } else {
     echo json_encode(['status' => 'error', 'errors' => $errors]);
 }
-
-$db->close();

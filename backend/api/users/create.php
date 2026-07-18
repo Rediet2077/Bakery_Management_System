@@ -30,15 +30,9 @@ if (!in_array($role, ['admin', 'cashier'])) {
 
 $db = getDB();
 
-// Check username exists
 $stmt = $db->prepare("SELECT id FROM users WHERE username = ?");
-$stmt->bind_param('s', $username);
-$stmt->execute();
-$exists = $stmt->get_result()->num_rows > 0;
-$stmt->close();
-
-if ($exists) {
-    $db->close();
+$stmt->execute([$username]);
+if ($stmt->fetch()) {
     http_response_code(409);
     echo json_encode(['message' => 'Username already exists']);
     exit();
@@ -46,11 +40,8 @@ if ($exists) {
 
 $hash = password_hash($password, PASSWORD_BCRYPT);
 $stmt = $db->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
-$stmt->bind_param('sss', $username, $hash, $role);
-$stmt->execute();
-$id = $db->insert_id;
-$stmt->close();
-$db->close();
+$stmt->execute([$username, $hash, $role]);
+$id = $db->lastInsertId();
 
 http_response_code(201);
 echo json_encode(['message' => 'User created', 'id' => $id]);

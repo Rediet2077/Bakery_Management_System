@@ -17,17 +17,14 @@ $sql = "SELECT s.id, s.total_amount, s.received, s.change_given, s.created_at,
 
 $conditions = [];
 $params = [];
-$types  = '';
 
 if ($from) {
     $conditions[] = "DATE(s.created_at) >= ?";
-    $params[]     = $from;
-    $types       .= 's';
+    $params[] = $from;
 }
 if ($to) {
     $conditions[] = "DATE(s.created_at) <= ?";
-    $params[]     = $to;
-    $types       .= 's';
+    $params[] = $to;
 }
 
 if (!empty($conditions)) {
@@ -37,16 +34,7 @@ if (!empty($conditions)) {
 $sql .= " ORDER BY s.created_at DESC";
 
 $stmt = $db->prepare($sql);
-if (!empty($params)) {
-    $stmt->bind_param($types, ...$params);
-}
-$stmt->execute();
-$result = $stmt->get_result();
-$sales  = [];
-while ($row = $result->fetch_assoc()) {
-    $sales[] = $row;
-}
-$stmt->close();
-$db->close();
+$stmt->execute($params);
+$sales = $stmt->fetchAll();
 
 echo json_encode($sales);

@@ -32,13 +32,9 @@ if (!$name || !$category || $price <= 0 || $stock < 0) {
 
 $db = getDB();
 $stmt = $db->prepare("UPDATE products SET name=?, category=?, price=?, stock=? WHERE id=?");
-$stmt->bind_param('ssdii', $name, $category, $price, $stock, $id);
-$stmt->execute();
-$affected = $stmt->affected_rows;
-$stmt->close();
-$db->close();
+$stmt->execute([$name, $category, $price, $stock, $id]);
 
-if ($affected === 0) {
+if ($stmt->rowCount() === 0) {
     http_response_code(404);
     echo json_encode(['message' => 'Product not found']);
     exit();

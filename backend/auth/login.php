@@ -22,12 +22,8 @@ if (!$username || !$password) {
 
 $db = getDB();
 $stmt = $db->prepare("SELECT id, username, password, role FROM users WHERE username = ?");
-$stmt->bind_param('s', $username);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-$stmt->close();
-$db->close();
+$stmt->execute([$username]);
+$user = $stmt->fetch();
 
 if (!$user || !password_verify($password, $user['password'])) {
     http_response_code(401);

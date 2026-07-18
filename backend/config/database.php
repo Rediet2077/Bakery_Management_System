@@ -6,24 +6,25 @@ define('DB_PASS', getenv('DB_PASS') ?: '');
 define('DB_NAME', getenv('DB_NAME') ?: 'defaultdb');
 
 function getDB() {
-    $conn = mysqli_init();
-    if (!$conn) {
-        http_response_code(500);
-        die(json_encode(['message' => 'mysqli_init failed']));
-    }
-    $conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 15);
+    $host = DB_HOST;
+    $port = DB_PORT;
+    $user = DB_USER;
+    $pass = DB_PASS;
+    $name = DB_NAME;
 
-    // Try with SSL first, fall back without if needed
-    $flags = MYSQLI_CLIENT_SSL | MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT;
-    if (!@$conn->real_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT, NULL, $flags)) {
-        // Retry without SSL verify
-        $conn = mysqli_init();
-        $conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 15);
-        if (!$conn->real_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT)) {
-            http_response_code(500);
-            die(json_encode(['message' => 'Database connection failed: ' . mysqli_connect_error()]));
-        }
+    $dsn = "mysql:host={$host};port={$port};dbname={$name};charset=utf8mb4";
+    $options = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_TIMEOUT            => 15,
+        PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
+        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4",
+    ];
+
+    try {
+        return new PDO($dsn, $user, $pass, $options);
+    } catch (PDOException $e) {
+        http_response_code(500);
+        die(json_encode(['message' => 'Database connection failed: ' . $e->getMessage()]));
     }
-    $conn->set_charset('utf8mb4');
-    return $conn;
 }

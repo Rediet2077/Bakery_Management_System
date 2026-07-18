@@ -25,11 +25,8 @@ if (!$name || !$category || $price <= 0 || $stock < 0) {
 
 $db = getDB();
 $stmt = $db->prepare("INSERT INTO products (name, category, price, stock) VALUES (?, ?, ?, ?)");
-$stmt->bind_param('ssdi', $name, $category, $price, $stock);
-$stmt->execute();
-$id = $db->insert_id;
-$stmt->close();
-$db->close();
+$stmt->execute([$name, $category, $price, $stock]);
+$id = $db->lastInsertId();
 
 http_response_code(201);
 echo json_encode(['message' => 'Product created', 'id' => $id]);

@@ -6,11 +6,7 @@ require_once __DIR__ . '/../../config/database.php';
 requireAdmin();
 
 $db = getDB();
-$result = $db->query("SELECT id, username, role, created_at FROM users ORDER BY id ASC");
-$users = [];
-while ($row = $result->fetch_assoc()) {
-    $users[] = $row;
-}
-$db->close();
+$stmt = $db->query("SELECT id, username, role, created_at FROM users ORDER BY id ASC");
+$users = $stmt->fetchAll();
 
 echo json_encode($users);

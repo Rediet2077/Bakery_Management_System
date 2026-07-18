@@ -20,13 +20,9 @@ if ($id <= 0) {
 
 $db = getDB();
 $stmt = $db->prepare("DELETE FROM products WHERE id=?");
-$stmt->bind_param('i', $id);
-$stmt->execute();
-$affected = $stmt->affected_rows;
-$stmt->close();
-$db->close();
+$stmt->execute([$id]);
 
-if ($affected === 0) {
+if ($stmt->rowCount() === 0) {
     http_response_code(404);
     echo json_encode(['message' => 'Product not found']);
     exit();

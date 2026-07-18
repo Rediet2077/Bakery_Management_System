@@ -18,7 +18,6 @@ if ($id <= 0) {
     exit();
 }
 
-// Prevent deleting yourself
 if ($id === intval($_SESSION['user_id'])) {
     http_response_code(403);
     echo json_encode(['message' => 'Cannot delete your own account']);
@@ -27,31 +26,23 @@ if ($id === intval($_SESSION['user_id'])) {
 
 $db = getDB();
 
-// Cannot delete admin accounts
 $stmt = $db->prepare("SELECT role FROM users WHERE id = ?");
-$stmt->bind_param('i', $id);
-$stmt->execute();
-$user = $stmt->get_result()->fetch_assoc();
-$stmt->close();
+$stmt->execute([$id]);
+$user = $stmt->fetch();
 
 if (!$user) {
-    $db->close();
     http_response_code(404);
     echo json_encode(['message' => 'User not found']);
     exit();
 }
 
 if ($user['role'] === 'admin') {
-    $db->close();
     http_response_code(403);
     echo json_encode(['message' => 'Cannot delete admin accounts']);
     exit();
 }
 
 $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
-$stmt->bind_param('i', $id);
-$stmt->execute();
-$stmt->close();
-$db->close();
+$stmt->execute([$id]);
 
 echo json_encode(['message' => 'User deleted']);

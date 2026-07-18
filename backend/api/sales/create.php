@@ -23,10 +23,9 @@ if (!$cashierId || empty($items) || $received <= 0) {
 }
 
 $db = getDB();
-$db->begin_transaction();
+$db->beginTransaction();
 
 try {
-    // Calculate total & validate stock
     $total = 0;
     $productData = [];
 
@@ -36,10 +35,8 @@ try {
         if ($pid <= 0 || $qty <= 0) throw new Exception('Invalid item data');
 
         $stmt = $db->prepare("SELECT id, price, stock FROM products WHERE id = ? FOR UPDATE");
-        $stmt->bind_param('i', $pid);
-        $stmt->execute();
-        $res = $stmt->get_result()->fetch_assoc();
-        $stmt->close();
+        $stmt->execute([$pid]);
+        $res = $stmt->fetch();
 
         if (!$res) throw new Exception("Product ID $pid not found");
         if ($res['stock'] < $qty) throw new Exception("Insufficient stock for product ID $pid");
@@ -54,42 +51,29 @@ try {
 
     $change = $received - $total;
 
-    // Insert sale
     $stmt = $db->prepare("INSERT INTO sales (cashier_id, total_amount, received, change_given) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param('iddd', $cashierId, $total, $received, $change);
-    $stmt->execute();
-    $saleId = $db->insert_id;
-    $stmt->close();
+    $stmt->execute([$cashierId, $total, $received, $change]);
+    $saleId = $db->lastInsertId();
 
-    // Insert sale items & update stock
     foreach ($productData as $pid => $pdata) {
-        $price = $pdata['price'];
-        $qty   = $pdata['qty'];
-
         $stmt = $db->prepare("INSERT INTO sale_items (sale_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param('iiid', $saleId, $pid, $qty, $price);
-        $stmt->execute();
-        $stmt->close();
+        $stmt->execute([$saleId, $pid, $pdata['qty'], $pdata['price']]);
 
         $stmt = $db->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
-        $stmt->bind_param('ii', $qty, $pid);
-        $stmt->execute();
-        $stmt->close();
+        $stmt->execute([$pdata['qty'], $pid]);
     }
 
     $db->commit();
-    $db->close();
 
     echo json_encode([
-        'message'  => 'Sale completed successfully',
-        'sale_id'  => $saleId,
-        'total'    => $total,
-        'change'   => $change,
+        'message' => 'Sale completed successfully',
+        'sale_id' => $saleId,
+        'total'   => $total,
+        'change'  => $change,
     ]);
 
 } catch (Exception $e) {
-    $db->rollback();
-    $db->close();
+    $db->rollBack();
     http_response_code(400);
     echo json_encode(['message' => $e->getMessage()]);
 }
