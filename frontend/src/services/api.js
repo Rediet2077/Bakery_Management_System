@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_URL || '/backend'
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://bakery-management-system-0cla.onrender.com/backend'
 
 async function request(path, options = {}) {
   const res = await fetch(`${BASE_URL}${path}`, {
