@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../middleware/cors.php';
 require_once __DIR__ . '/../../middleware/auth.php';
 require_once __DIR__ . '/../../config/database.php';
 
-requireAdmin();
+$authUser = requireAdmin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
     http_response_code(405);
@@ -18,14 +18,13 @@ if ($id <= 0) {
     exit();
 }
 
-if ($id === intval($_SESSION['user_id'])) {
+if ($id === intval($authUser['id'])) {
     http_response_code(403);
     echo json_encode(['message' => 'Cannot delete your own account']);
     exit();
 }
 
 $db = getDB();
-
 $stmt = $db->prepare("SELECT role FROM users WHERE id = ?");
 $stmt->execute([$id]);
 $user = $stmt->fetch();

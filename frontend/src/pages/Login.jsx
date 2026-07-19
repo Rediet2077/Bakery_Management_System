@@ -18,7 +18,8 @@ export default function Login() {
     setLoading(true)
     try {
       const data = await login(form.username, form.password)
-      if (data.role === 'admin') navigate('/admin')
+      const role = data.user?.role || data.role
+      if (role === 'admin') navigate('/admin')
       else navigate('/cashier')
     } catch (e) {
       setError(e.message || 'Invalid credentials')

@@ -1,27 +1,44 @@
-// In production (Vercel), VITE_API_URL points to the Render backend.
-// In local dev, requests go through the Vite proxy at /backend → XAMPP.
 const BASE_URL = import.meta.env.VITE_API_URL || 'https://bakery-management-system-0cla.onrender.com'
 
+// Token stored in localStorage — no cookies needed
+export const getToken = () => localStorage.getItem('bms_token')
+export const setToken = (t) => localStorage.setItem('bms_token', t)
+export const clearToken = () => localStorage.removeItem('bms_token')
+
 async function request(path, options = {}) {
+  const token = getToken()
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+    ...options.headers,
+  }
+
   const res = await fetch(`${BASE_URL}${path}`, {
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json', ...options.headers },
     ...options,
+    headers,
   })
+
   const data = await res.json()
   if (!res.ok) throw new Error(data.message || 'Request failed')
   return data
 }
 
 // Auth
-export const login = (username, password) =>
-  request('/auth/login.php', { method: 'POST', body: JSON.stringify({ username, password }) })
+export const login = async (username, password) => {
+  const data = await request('/auth/login.php', {
+    method: 'POST',
+    body: JSON.stringify({ username, password }),
+  })
+  if (data.token) setToken(data.token)
+  return data
+}
 
-export const logout = () =>
-  request('/auth/logout.php', { method: 'POST' })
+export const logout = () => {
+  clearToken()
+  return Promise.resolve()
+}
 
-export const getMe = () =>
-  request('/auth/me.php')
+export const getMe = () => request('/auth/me.php')
 
 // Products
 export const getProducts = () => request('/api/products/index.php')

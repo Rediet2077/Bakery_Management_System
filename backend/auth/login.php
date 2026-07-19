@@ -2,8 +2,6 @@
 require_once __DIR__ . '/../middleware/cors.php';
 require_once __DIR__ . '/../config/database.php';
 
-if (session_status() === PHP_SESSION_NONE) session_start();
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['message' => 'Method not allowed']);
@@ -31,13 +29,21 @@ if (!$user || !password_verify($password, $user['password'])) {
     exit();
 }
 
-$_SESSION['user_id'] = $user['id'];
-$_SESSION['username'] = $user['username'];
-$_SESSION['role'] = $user['role'];
+// Generate a simple signed token: base64(payload).base64(signature)
+$secret = getenv('JWT_SECRET') ?: 'bakery_secret_key_2024';
+$payload = base64_encode(json_encode([
+    'id'       => $user['id'],
+    'username' => $user['username'],
+    'role'     => $user['role'],
+    'exp'      => time() + 86400 // 24 hours
+]));
+$sig = base64_encode(hash_hmac('sha256', $payload, $secret, true));
+$token = $payload . '.' . $sig;
 
 echo json_encode([
     'message' => 'Login successful',
-    'user' => [
+    'token'   => $token,
+    'user'    => [
         'id'       => $user['id'],
         'username' => $user['username'],
         'role'     => $user['role'],
