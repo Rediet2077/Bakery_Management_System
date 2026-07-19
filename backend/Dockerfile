@@ -18,9 +18,9 @@ RUN printf '<VirtualHost *:80>\n\
     CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
 </VirtualHost>\n' > /etc/apache2/sites-available/000-default.conf
 
-# PHP session config
+# PHP session config - SameSite=None + Secure required for cross-origin cookies over HTTPS
 RUN echo "session.cookie_samesite = None" >> /usr/local/etc/php/conf.d/session.ini \
- && echo "session.cookie_secure = 0" >> /usr/local/etc/php/conf.d/session.ini \
+ && echo "session.cookie_secure = 1" >> /usr/local/etc/php/conf.d/session.ini \
  && echo "session.cookie_httponly = 1" >> /usr/local/etc/php/conf.d/session.ini
 
 # Copy backend files into DocumentRoot
