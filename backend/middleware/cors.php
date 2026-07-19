@@ -3,21 +3,23 @@ $allowed_origins = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
     'http://localhost',
+    'https://bakery-management-system-v2r6.vercel.app',
+    'https://bakery-management-system-kappa.vercel.app',
 ];
 
-// Allow Vercel frontend URL set via environment variable
-$vercel_url = getenv('FRONTEND_URL');
-if ($vercel_url) {
-    $allowed_origins[] = rtrim($vercel_url, '/');
+// Also allow any Vercel preview URL set via environment variable
+$env_url = getenv('FRONTEND_URL');
+if ($env_url) {
+    $allowed_origins[] = rtrim($env_url, '/');
 }
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-if (in_array($origin, $allowed_origins)) {
+// Allow any *.vercel.app origin to support preview deployments
+if (in_array($origin, $allowed_origins) || preg_match('/^https:\/\/.*\.vercel\.app$/', $origin)) {
     header("Access-Control-Allow-Origin: $origin");
 } else {
-    // Fallback: allow the frontend URL or localhost
-    header("Access-Control-Allow-Origin: " . ($vercel_url ?: 'http://localhost'));
+    header("Access-Control-Allow-Origin: https://bakery-management-system-v2r6.vercel.app");
 }
 
 header("Access-Control-Allow-Credentials: true");
