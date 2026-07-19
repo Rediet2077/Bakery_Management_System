@@ -1,6 +1,6 @@
 // In production (Vercel), VITE_API_URL points to the Render backend.
 // In local dev, requests go through the Vite proxy at /backend → XAMPP.
-const BASE_URL = import.meta.env.VITE_API_URL || '/backend'
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://bakery-management-system-0cla.onrender.com'
 
 async function request(path, options = {}) {
   const res = await fetch(`${BASE_URL}${path}`, {
