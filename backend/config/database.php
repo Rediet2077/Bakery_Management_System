@@ -3,15 +3,14 @@ define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
 define('DB_PORT', (int)(getenv('DB_PORT') ?: 3306));
 define('DB_USER', getenv('DB_USER') ?: 'root');
 define('DB_PASS', getenv('DB_PASS') ?: '');
-define('DB_NAME', getenv('DB_NAME') ?: 'defaultdb');
+define('DB_NAME', getenv('DB_NAME') ?: 'bakery_db');
 
 function getDB() {
-    $dsn = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=utf8mb4;sslmode=require";
+    $dsn = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=utf8mb4";
     try {
         $pdo = new PDO($dsn, DB_USER, DB_PASS, [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            1014                         => false, // PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT = 1014
         ]);
         return $pdo;
     } catch (PDOException $e) {
