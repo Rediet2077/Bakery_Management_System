@@ -75,7 +75,7 @@ export default function CashierDashboard() {
                   ))}
                   {filtered.length === 0 && (
                     <div className="col-span-full text-center text-gray-400 py-12">
-                      <div className="text-4xl mb-2">🍞</div>
+                      <div className="text-4xl mb-2"></div>
                       <p>No products found</p>
                     </div>
                   )}
