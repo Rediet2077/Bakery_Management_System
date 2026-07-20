@@ -30,7 +30,7 @@ export default function Sidebar({ role = 'admin' }) {
       {/* Logo */}
       <div className="px-5 py-5 border-b border-amber-800">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center text-lg">🥖</div>
+          <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center text-lg"></div>
           <span className="font-bold text-white text-base">BMS</span>
         </div>
       </div>
