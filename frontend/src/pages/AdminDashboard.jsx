@@ -43,7 +43,7 @@ export default function AdminDashboard() {
               value={`Birr ${parseFloat(stats.today_revenue || 0).toFixed(2)}`}
               sub={`${stats.revenue_change >= 0 ? '+' : ''}${stats.revenue_change || 0}% from yesterday`}
               positive={stats.revenue_change >= 0}
-              icon="💰"
+              icon="$"
               iconBg="bg-green-100"
             />
             <StatCard
@@ -51,14 +51,14 @@ export default function AdminDashboard() {
               value={stats.today_sales || 0}
               sub={`${stats.sales_change >= 0 ? '+' : ''}${stats.sales_change || 0}% from yesterday`}
               positive={stats.sales_change >= 0}
-              icon="🛒"
+              icon="b"
               iconBg="bg-blue-100"
             />
             <StatCard
               label="Low Stock Items"
               value={lowStock.length}
               sub={<span className="text-amber-600 text-xs cursor-pointer hover:underline">View Details</span>}
-              icon="⚠️"
+              icon="A"
               iconBg="bg-orange-100"
             />
           </div>
