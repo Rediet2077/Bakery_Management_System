@@ -1,6 +1,63 @@
 import { useState } from 'react'
 import { createSale } from '../services/api'
 
+function CartItem({ item, onUpdate, onRemove }) {
+  const [inputVal, setInputVal] = useState(String(item.quantity))
+
+  // Keep input in sync if quantity changes via +/- buttons
+  const qty = item.quantity
+  if (inputVal !== '' && parseInt(inputVal) !== qty && document.activeElement?.dataset?.itemId !== String(item.id)) {
+    setInputVal(String(qty))
+  }
+
+  const commit = (val) => {
+    const n = parseInt(val)
+    if (!isNaN(n) && n > 0) {
+      onUpdate(item.id, n)
+      setInputVal(String(n))
+    } else {
+      // Reset to current quantity if invalid
+      setInputVal(String(item.quantity))
+    }
+  }
+
+  return (
+    <div className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2">
+      <div className="flex-1 min-w-0">
+        <p className="text-xs font-semibold text-gray-700 truncate">{item.name}</p>
+        <p className="text-xs text-gray-400">Birr {parseFloat(item.price).toFixed(2)} each</p>
+      </div>
+      <div className="flex items-center gap-1 ml-2">
+        <button
+          onClick={() => { const n = item.quantity - 1; onUpdate(item.id, n); if (n > 0) setInputVal(String(n)) }}
+          className="w-6 h-6 bg-gray-200 hover:bg-amber-200 rounded text-xs font-bold leading-none"
+        >−</button>
+        <input
+          type="number"
+          min="1"
+          data-item-id={item.id}
+          value={inputVal}
+          onChange={e => setInputVal(e.target.value)}
+          onBlur={e => commit(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter') { e.target.blur() } }}
+          className="w-10 h-6 text-center text-xs font-bold border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        />
+        <button
+          onClick={() => { const n = item.quantity + 1; onUpdate(item.id, n); setInputVal(String(n)) }}
+          className="w-6 h-6 bg-gray-200 hover:bg-amber-200 rounded text-xs font-bold leading-none"
+        >+</button>
+        <button
+          onClick={() => onRemove(item.id)}
+          className="w-6 h-6 bg-red-100 hover:bg-red-200 text-red-500 rounded text-xs ml-1"
+        >✕</button>
+      </div>
+      <span className="text-xs font-bold text-amber-700 ml-2 w-14 text-right">
+        Birr {(item.price * item.quantity).toFixed(2)}
+      </span>
+    </div>
+  )
+}
+
 export default function Cart({ items, onUpdate, onRemove, onClear, cashierId }) {
   const [received, setReceived] = useState('')
   const [loading, setLoading] = useState(false)
@@ -45,39 +102,7 @@ export default function Cart({ items, onUpdate, onRemove, onClear, cashierId }) 
           </div>
         )}
         {items.map(item => (
-          <div key={item.id} className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-gray-700 truncate">{item.name}</p>
-              <p className="text-xs text-gray-400">Birr {parseFloat(item.price).toFixed(2)} each</p>
-            </div>
-            <div className="flex items-center gap-1 ml-2">
-              <button
-                onClick={() => onUpdate(item.id, item.quantity - 1)}
-                className="w-6 h-6 bg-gray-200 hover:bg-amber-200 rounded text-xs font-bold leading-none"
-              >−</button>
-              <input
-                type="number"
-                min="1"
-                value={item.quantity}
-                onChange={e => {
-                  const val = parseInt(e.target.value)
-                  if (!isNaN(val) && val > 0) onUpdate(item.id, val)
-                }}
-                className="w-9 h-6 text-center text-xs font-bold border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-amber-400"
-              />
-              <button
-                onClick={() => onUpdate(item.id, item.quantity + 1)}
-                className="w-6 h-6 bg-gray-200 hover:bg-amber-200 rounded text-xs font-bold leading-none"
-              >+</button>
-              <button
-                onClick={() => onRemove(item.id)}
-                className="w-6 h-6 bg-red-100 hover:bg-red-200 text-red-500 rounded text-xs ml-1"
-              >✕</button>
-            </div>
-            <span className="text-xs font-bold text-amber-700 ml-2 w-14 text-right">
-              Birr {(item.price * item.quantity).toFixed(2)}
-            </span>
-          </div>
+          <CartItem key={item.id} item={item} onUpdate={onUpdate} onRemove={onRemove} />
         ))}
       </div>
 
