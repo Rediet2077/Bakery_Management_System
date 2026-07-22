@@ -62,4 +62,7 @@ export const createUser = (data) => request('/api/users/create.php', { method: '
 export const deleteUser = (id) => request(`/api/users/delete.php?id=${id}`, { method: 'DELETE' })
 
 // Dashboard
-export const getDashboard = () => request('/api/dashboard/index.php')
+export const getDashboard = () => {
+  const threshold = localStorage.getItem('bms_low_stock') || '10'
+  return request(`/api/dashboard/index.php?threshold=${threshold}`)
+}
