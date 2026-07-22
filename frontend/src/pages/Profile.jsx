@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar'
 export default function Profile() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     getMe()
@@ -16,11 +17,11 @@ export default function Profile() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar role="cashier" />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar user={user} title="Profile" />
+      <Sidebar role="cashier" open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+        <Navbar user={user} title="Profile" onMenuClick={() => setSidebarOpen(true)} />
 
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <h1 className="text-xl font-bold text-gray-800 mb-6">My Profile</h1>
 
           {loading ? (

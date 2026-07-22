@@ -9,6 +9,7 @@ export default function SaleDetail() {
   const [sale, setSale] = useState(null)
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -20,11 +21,11 @@ export default function SaleDetail() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar role="admin" />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar user={user} title="Sale Details" />
+      <Sidebar role="admin" open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+        <Navbar user={user} title="Sale Details" onMenuClick={() => setSidebarOpen(true)} />
 
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <button
             onClick={() => navigate('/admin/sales')}
             className="flex items-center gap-2 text-amber-700 hover:text-amber-800 text-sm font-medium mb-5"

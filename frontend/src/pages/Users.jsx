@@ -12,6 +12,7 @@ export default function Users() {
   const [form, setForm] = useState({ username: '', password: '', role: 'cashier' })
   const [formError, setFormError] = useState('')
   const [msg, setMsg] = useState(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const load = () => {
     setLoading(true)
@@ -54,11 +55,11 @@ export default function Users() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar role="admin" />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar user={user} title="Users" />
+      <Sidebar role="admin" open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+        <Navbar user={user} title="Users" onMenuClick={() => setSidebarOpen(true)} />
 
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <div className="flex items-center justify-between mb-5">
             <h1 className="text-xl font-bold text-gray-800">Users</h1>
             <button onClick={() => setShowForm(true)} className="btn-primary flex items-center gap-2">

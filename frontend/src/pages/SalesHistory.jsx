@@ -12,6 +12,7 @@ export default function SalesHistory() {
   const [to, setTo] = useState('')
   const [deletingId, setDeletingId] = useState(null)
   const [confirmId, setConfirmId] = useState(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const navigate = useNavigate()
 
   const load = () => {
@@ -41,15 +42,15 @@ export default function SalesHistory() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar role="admin" />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar user={user} title="Sales History" />
+      <Sidebar role="admin" open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+        <Navbar user={user} title="Sales History" onMenuClick={() => setSidebarOpen(true)} />
 
-        <main className="flex-1 overflow-y-auto p-6">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-5">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center justify-between gap-3 mb-5">
             <h1 className="text-xl font-bold text-gray-800">Sales History</h1>
             {/* Date filter */}
-            <form onSubmit={handleFilter} className="flex items-center gap-2">
+            <form onSubmit={handleFilter} className="flex flex-wrap items-center gap-2">
               <span className="text-sm text-gray-500">From</span>
               <input type="date" value={from} onChange={e => setFrom(e.target.value)} className="input-field w-36" />
               <span className="text-sm text-gray-500">To</span>

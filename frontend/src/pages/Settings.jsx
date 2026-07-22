@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar'
 export default function Settings() {
   const [user, setUser] = useState(null)
   const [saved, setSaved] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [shopName, setShopName] = useState(
     () => localStorage.getItem('bms_shop_name') || 'Bakery Management System'
   )
@@ -31,11 +32,11 @@ export default function Settings() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar role="admin" />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar user={user} title="Settings" />
+      <Sidebar role="admin" open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+        <Navbar user={user} title="Settings" onMenuClick={() => setSidebarOpen(true)} />
 
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <h1 className="text-xl font-bold text-gray-800 mb-6">Settings</h1>
 
           <div className="max-w-lg space-y-5">

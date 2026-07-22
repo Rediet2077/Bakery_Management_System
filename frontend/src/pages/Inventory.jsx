@@ -12,6 +12,7 @@ export default function Inventory() {
   const [editProduct, setEditProduct] = useState(null)
   const [deleteId, setDeleteId] = useState(null)
   const [msg, setMsg] = useState(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const load = () => {
     setLoading(true)
@@ -55,11 +56,11 @@ export default function Inventory() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar role="admin" />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar user={user} title="Products" />
+      <Sidebar role="admin" open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+        <Navbar user={user} title="Products" onMenuClick={() => setSidebarOpen(true)} />
 
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-5">
             <h1 className="text-xl font-bold text-gray-800">Products</h1>
