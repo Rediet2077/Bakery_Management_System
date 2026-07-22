@@ -54,6 +54,7 @@ export const getSales = (from, to) => {
   return request(url)
 }
 export const getSaleDetail = (id) => request(`/api/sales/detail.php?id=${id}`)
+export const deleteSale = (id) => request(`/api/sales/delete.php?id=${id}`, { method: 'DELETE' })
 
 // Users
 export const getUsers = () => request('/api/users/index.php')
