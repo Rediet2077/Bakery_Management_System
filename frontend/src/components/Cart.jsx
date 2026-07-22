@@ -55,7 +55,16 @@ export default function Cart({ items, onUpdate, onRemove, onClear, cashierId }) 
                 onClick={() => onUpdate(item.id, item.quantity - 1)}
                 className="w-6 h-6 bg-gray-200 hover:bg-amber-200 rounded text-xs font-bold leading-none"
               >−</button>
-              <span className="w-6 text-center text-xs font-bold">{item.quantity}</span>
+              <input
+                type="number"
+                min="1"
+                value={item.quantity}
+                onChange={e => {
+                  const val = parseInt(e.target.value)
+                  if (!isNaN(val) && val > 0) onUpdate(item.id, val)
+                }}
+                className="w-9 h-6 text-center text-xs font-bold border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-amber-400"
+              />
               <button
                 onClick={() => onUpdate(item.id, item.quantity + 1)}
                 className="w-6 h-6 bg-gray-200 hover:bg-amber-200 rounded text-xs font-bold leading-none"
