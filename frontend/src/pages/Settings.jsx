@@ -110,30 +110,6 @@ export default function Settings() {
               </div>
             </div>
 
-            {/* System Info */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-100">
-                <h2 className="font-bold text-gray-800">System Info</h2>
-              </div>
-              <div className="p-6 space-y-3">
-                <div className="flex justify-between items-center py-1 border-b border-gray-50">
-                  <span className="text-sm text-gray-500">System</span>
-                  <span className="text-sm text-gray-700">Bakery Management System</span>
-                </div>
-                <div className="flex justify-between items-center py-1 border-b border-gray-50">
-                  <span className="text-sm text-gray-500">Version</span>
-                  <span className="text-sm text-gray-700">1.0.0</span>
-                </div>
-                <div className="flex justify-between items-center py-1 border-b border-gray-50">
-                  <span className="text-sm text-gray-500">Backend</span>
-                  <span className="text-sm text-gray-700">PHP + MySQL (XAMPP)</span>
-                </div>
-                <div className="flex justify-between items-center py-1">
-                  <span className="text-sm text-gray-500">Frontend</span>
-                  <span className="text-sm text-gray-700">React + Vite + Tailwind</span>
-                </div>
-              </div>
-            </div>
           </div>
         </main>
       </div>
