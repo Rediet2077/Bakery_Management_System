@@ -2,18 +2,18 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { logout } from '../services/api'
 
 const adminLinks = [
-  { to: '/admin', label: 'Dashboard', icon: '📊' },
-  { to: '/admin/inventory', label: 'Products', icon: '🍞' },
-  { to: '/admin/users', label: 'Users', icon: '👥' },
-  { to: '/admin/sales', label: 'Sales History', icon: '📋' },
-  { to: '/admin/reports', label: 'Reports', icon: '📈' },
-  { to: '/admin/settings', label: 'Settings', icon: '⚙️' },
+  { to: '/admin', label: 'Dashboard', icon: '' },
+  { to: '/admin/inventory', label: 'Products', icon: '' },
+  { to: '/admin/users', label: 'Users', icon: '' },
+  { to: '/admin/sales', label: 'Sales History', icon: '' },
+  { to: '/admin/reports', label: 'Reports', icon: '' },
+  { to: '/admin/settings', label: 'Settings', icon: '' },
 ]
 
 const cashierLinks = [
-  { to: '/cashier', label: 'POS Dashboard', icon: '🛒' },
-  { to: '/cashier/sales', label: 'Sales History', icon: '📋' },
-  { to: '/cashier/profile', label: 'Profile', icon: '👤' },
+  { to: '/cashier', label: 'POS Dashboard', icon: '' },
+  { to: '/cashier/sales', label: 'Sales History', icon: '' },
+  { to: '/cashier/profile', label: 'Profile', icon: '' },
 ]
 
 export default function Sidebar({ role = 'admin' }) {
@@ -30,7 +30,7 @@ export default function Sidebar({ role = 'admin' }) {
       {/* Logo */}
       <div className="px-5 py-5 border-b border-amber-800">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center text-lg">🥖</div>
+          <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center text-lg"></div>
           <span className="font-bold text-white text-base">BMS</span>
         </div>
       </div>

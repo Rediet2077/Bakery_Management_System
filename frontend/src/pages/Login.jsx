@@ -41,9 +41,9 @@ export default function Login() {
           }}
         />
         <div className="relative z-10">
-          <div className="text-6xl mb-6">🥖</div>
+          <div className="text-6xl mb-6"></div>
           <h1 className="text-white text-4xl font-bold leading-tight mb-3">Bakery<br/>Management<br/>System</h1>
-          <p className="text-amber-200 text-sm">© 2024 Bakery Management System</p>
+          <p className="text-amber-200 text-sm">© 2026 Bakery Management System</p>
         </div>
       </div>
 
@@ -52,7 +52,7 @@ export default function Login() {
         <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
           {/* Logo mobile */}
           <div className="lg:hidden flex items-center gap-2 mb-6">
-            <span className="text-3xl">🥖</span>
+            <span className="text-3xl"></span>
             <span className="text-amber-800 font-bold text-xl">Bakery</span>
           </div>
 
@@ -94,7 +94,7 @@ export default function Login() {
 
             {error && (
               <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg border border-red-100">
-                ⚠️ {error}
+                 {error}
               </div>
             )}
 
