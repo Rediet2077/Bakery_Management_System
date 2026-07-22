@@ -2,18 +2,18 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { logout } from '../services/api'
 
 const adminLinks = [
-  { to: '/admin',           label: 'Dashboard',     icon: '📊', end: true },
-  { to: '/admin/inventory', label: 'Products',       icon: '🧁', end: false },
-  { to: '/admin/users',     label: 'Users',          icon: '👤', end: false },
-  { to: '/admin/sales',     label: 'Sales History',  icon: '🛒', end: false },
-  { to: '/admin/reports',   label: 'Reports',        icon: '📈', end: false },
-  { to: '/admin/settings',  label: 'Settings',       icon: '⚙️', end: false },
+  { to: '/admin',           label: 'Dashboard',     icon: '', end: true },
+  { to: '/admin/inventory', label: 'Products',       icon: '', end: false },
+  { to: '/admin/users',     label: 'Users',          icon: '', end: false },
+  { to: '/admin/sales',     label: 'Sales History',  icon: '', end: false },
+  { to: '/admin/reports',   label: 'Reports',        icon: '', end: false },
+  { to: '/admin/settings',  label: 'Settings',       icon: '', end: false },
 ]
 
 const cashierLinks = [
-  { to: '/cashier',        label: 'POS Dashboard', icon: '🖥️', end: true },
-  { to: '/cashier/sales',  label: 'Sales History', icon: '🛒', end: false },
-  { to: '/cashier/profile',label: 'Profile',       icon: '👤', end: false },
+  { to: '/cashier',        label: 'POS Dashboard', icon: '', end: true },
+  { to: '/cashier/sales',  label: 'Sales History', icon: '', end: false },
+  { to: '/cashier/profile',label: 'Profile',       icon: '', end: false },
 ]
 
 export default function Sidebar({ role = 'admin', open, onClose }) {
